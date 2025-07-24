@@ -6,7 +6,7 @@ st.title("💬 Phen's AI Detection")
 st.write(
     "This is a simple bot to distigunish AI and Human Text "
     "To use this app, you need to provide text or paragraph). "
-    
+)
 
 # Ask user for their OpenAI API key via `st.text_input`.
 # Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
