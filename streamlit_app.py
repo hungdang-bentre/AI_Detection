@@ -1,49 +1,11 @@
 import streamlit as st
-from openai import OpenAI
+import joblib
 
-# Show title and description.
-st.title("💬 Phen's AI Detection")
-st.write(
-    "This is a simple bot to distigunish AI and Human Text "
-    "To use this app, you need to provide text or paragraph). "
-)
+model = joblib.load('ai_text_classifier.pkl')
 
-# Ask user for their OpenAI API key via `st.text_input`.
-# Alternatively, you can store the API key in `./.streamlit/secrets.toml` and access it
-# via `st.secrets`, see https://docs.streamlit.io/develop/concepts/connections/secrets-management
-openai_api_key = st.text_input("type your text", type="password")
+st.title("🤖 AI vs Human Text Classifier")
+user_input = st.text_area("Nhập đoạn văn để kiểm tra", height=200)
 
-    # Create a session state variable to store the chat messages. This ensures that the
-    # messages persist across reruns.
-    if "messages" not in st.session_state:
-        st.session_state.messages = []
-
-    # Display the existing chat messages via `st.chat_message`.
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-
-    # Create a chat input field to allow the user to enter a message. This will display
-    # automatically at the bottom of the page.
-    if prompt := st.chat_input("What is up?"):
-
-        # Store and display the current prompt.
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        # Generate a response using the OpenAI API.
-        stream = client.chat.completions.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
-        )
-
-        # Stream the response to the chat using `st.write_stream`, then store it in 
-        # session state.
-        with st.chat_message("assistant"):
-            response = st.write_stream(stream)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+if user_input:
+    result = model.predict([user_input])[0]
+    st.success(f"Kết quả: {'AI 🧠' if result == 1.0 else 'Human 👤'}")
