@@ -9,3 +9,4 @@ user_input = st.text_area("Nhập đoạn văn để kiểm tra", height=200)
 if user_input:
     result = model.predict([user_input])[0]
     st.success(f"Kết quả: {'AI 🧠' if result == 1.0 else 'Human 👤'}")
+streamlit run streamlit_app.py
